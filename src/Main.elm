@@ -5,13 +5,17 @@ import Html exposing (Html, div, h1, text)
 import Html.Attributes exposing (style)
 
 
+
 -- MAIN
+
 
 main =
     Browser.sandbox { init = init, update = update, view = view }
 
 
+
 -- MODEL
+
 
 type alias Model =
     { message : String }
@@ -22,7 +26,9 @@ init =
     { message = "Welcome to Bridge - Conflict Resolution App" }
 
 
+
 -- UPDATE
+
 
 type Msg
     = NoOp
@@ -35,7 +41,9 @@ update msg model =
             model
 
 
+
 -- VIEW
+
 
 view : Model -> Html Msg
 view model =
