@@ -1,8 +1,8 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, h1, text)
-import Html.Attributes exposing (style)
+import Html exposing (Html)
+import Pages.Dashboard as Dashboard
 
 
 
@@ -10,7 +10,11 @@ import Html.Attributes exposing (style)
 
 
 main =
-    Browser.sandbox { init = init, update = update, view = view }
+    Browser.sandbox
+        { init = init
+        , update = update
+        , view = view
+        }
 
 
 
@@ -18,12 +22,14 @@ main =
 
 
 type alias Model =
-    { message : String }
+    { dashboard : Dashboard.Model
+    }
 
 
 init : Model
 init =
-    { message = "Welcome to Bridge - Conflict Resolution App" }
+    { dashboard = Dashboard.init
+    }
 
 
 
@@ -31,14 +37,14 @@ init =
 
 
 type Msg
-    = NoOp
+    = DashboardMsg Dashboard.Msg
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        NoOp ->
-            model
+        DashboardMsg dashboardMsg ->
+            { model | dashboard = Dashboard.update dashboardMsg model.dashboard }
 
 
 
@@ -47,17 +53,4 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div
-        [ style "display" "flex"
-        , style "justify-content" "center"
-        , style "align-items" "center"
-        , style "height" "100vh"
-        , style "background" "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-        , style "color" "white"
-        , style "text-align" "center"
-        ]
-        [ div []
-            [ h1 [] [ text model.message ]
-            , div [] [ text "Ready to build something amazing!" ]
-            ]
-        ]
+    Html.map DashboardMsg (Dashboard.view model.dashboard)

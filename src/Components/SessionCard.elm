@@ -14,27 +14,40 @@ import Types.Session exposing (Session, SessionStatus(..), sessionStatusColor, s
 view : Session -> Html msg
 view session =
     div
-        [ class "bg-white br2 shadow-2 pa0 ma2 w5 h5 flex flex-column"
-        , style "min-height" "160px"
-        , style "cursor" "pointer"
+        [ class "bg-white br2 ma2 pointer"
+        , style "width" "220px"
+        , style "height" "180px"
+        , style "box-shadow" "0 2px 8px rgba(0,0,0,0.1)"
+        , style "border" "1px solid rgba(0,0,0,0.1)"
         ]
         [ -- Header with participant name and status indicator
           div
-            [ class "bg-near-white br2 br--top pa2 flex justify-between items-center bb b--light-gray" ]
+            [ class "bg-near-white br2 br--top pa2 flex justify-between items-center"
+            , style "height" "35px"
+            , style "border-bottom" "1px solid rgba(0,0,0,0.05)"
+            ]
             [ h4
-                [ class "ma0 f6 fw5 dark-gray truncate" ]
+                [ class "ma0 f6 fw5 dark-gray truncate"
+                , style "max-width" "160px"
+                ]
                 [ text ("with " ++ session.participantName) ]
             , div
-                [ class ("w3 h3 br-100 " ++ statusBgColor session.status) ]
+                [ class "br-100 flex-shrink-0"
+                , style "width" "8px"
+                , style "height" "8px"
+                , style "background-color" (statusColor session.status)
+                ]
                 []
             ]
 
         -- Content area
         , div
-            [ class "pa2 flex-auto flex flex-column justify-between" ]
-            [ div []
+            [ class "pa3 flex flex-column justify-between"
+            , style "height" "145px"
+            ]
+            [ div [ class "flex-auto" ]
                 [ p
-                    [ class "ma0 mb2 f7 gray" ]
+                    [ class "ma0 mb2 f6 gray fw5" ]
                     [ text ("Round " ++ String.fromInt session.currentRound ++ " of " ++ String.fromInt session.totalRounds) ]
                 , p
                     [ class "ma0 mb1 f7 light-silver" ]
@@ -43,16 +56,22 @@ view session =
                     [ class "ma0 mb2 f7 light-silver" ]
                     [ text ("Last activity: " ++ formatTimeAgo session.lastActivity) ]
                 , p
-                    [ class "ma0 mb2 f8 silver lh-copy" ]
+                    [ class "ma0 mb3 f7 gray lh-copy"
+                    , style "overflow" "hidden"
+                    , style "display" "-webkit-box"
+                    , style "-webkit-line-clamp" "2"
+                    , style "-webkit-box-orient" "vertical"
+                    ]
                     [ text session.description ]
                 ]
 
             -- Status badge
-            , div
-                [ class "flex justify-start" ]
+            , div [ class "flex justify-start" ]
                 [ span
-                    [ class ("f8 ph2 pv1 br3 " ++ statusTextColor session.status ++ " " ++ statusBorderColor session.status)
+                    [ class ("f7 ph2 pv1 br3 " ++ statusClasses session.status)
                     , style "border" "1px solid"
+                    , style "font-size" "10px"
+                    , style "line-height" "1"
                     ]
                     [ text (sessionStatusToString session.status) ]
                 ]
@@ -64,46 +83,33 @@ view session =
 -- HELPERS
 
 
-statusBgColor : SessionStatus -> String
-statusBgColor status =
+statusColor : SessionStatus -> String
+statusColor status =
     case status of
         Waiting ->
-            "bg-orange"
+            "#ffa500"
 
         Ready ->
-            "bg-blue"
+            "#4a90e2"
 
         Overdue ->
-            "bg-red"
+            "#ff6b6b"
 
 
-statusTextColor : SessionStatus -> String
-statusTextColor status =
+statusClasses : SessionStatus -> String
+statusClasses status =
     case status of
         Waiting ->
-            "orange"
+            "gray b--light-gray"
 
         Ready ->
-            "blue bg-light-blue"
+            "blue b--blue"
 
         Overdue ->
-            "red bg-washed-red"
-
-
-statusBorderColor : SessionStatus -> String
-statusBorderColor status =
-    case status of
-        Waiting ->
-            "b--orange"
-
-        Ready ->
-            "b--blue"
-
-        Overdue ->
-            "b--red"
+            "red b--red"
 
 
 formatTimeAgo : Time.Posix -> String
 formatTimeAgo time =
-    -- Simplified time formatting - you'd want a proper time library
+    -- Simplified - in real app you'd calculate actual time differences
     "2h ago"

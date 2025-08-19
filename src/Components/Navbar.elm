@@ -12,14 +12,18 @@ import Html.Events exposing (..)
 view : Html msg
 view =
     nav
-        [ class "bg-white-80 bb b--light-gray pv3 ph4 flex justify-between items-center"
+        [ class "bg-white-80 bb b--light-gray flex justify-between items-center"
+        , style "height" "80px"
+        , style "padding-left" "60px"
+        , style "padding-right" "60px"
+        , style "border-bottom" "1px solid rgba(0,0,0,0.05)"
         , style "backdrop-filter" "blur(10px)"
         ]
         [ -- Logo/Brand
           div
             [ class "flex items-center" ]
             [ h1
-                [ class "ma0 f3 fw3 dark-gray" ]
+                [ class "ma0 brand-text" ]
                 [ text "Bridge" ]
             ]
 
@@ -27,7 +31,21 @@ view =
         , div
             [ class "flex items-center" ]
             [ div
-                [ class "w2 h2 br-100 ba b--gray bg-gray" ]
-                []
+                [ class "relative" ]
+                [ div
+                    [ class "br-100 ba b--gray"
+                    , style "width" "32px"
+                    , style "height" "32px"
+                    ]
+                    []
+                , div
+                    [ class "absolute br-100 bg-gray"
+                    , style "width" "16px"
+                    , style "height" "16px"
+                    , style "top" "8px"
+                    , style "left" "8px"
+                    ]
+                    []
+                ]
             ]
         ]

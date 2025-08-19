@@ -63,25 +63,66 @@ view model =
     div
         [ class "min-vh-100"
         , style "background" "linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%)"
+        , style "padding-bottom" "2rem"
         ]
         [ Navbar.view
         , main_
-            [ class "ph4 pv3" ]
-            [ -- Header with tabs and new session button
+            [ class "pa0" ]
+            [ -- Tab Navigation Area
               div
-                [ class "flex justify-between items-end mb3" ]
-                [ Html.map TabChanged (Tabs.view model.activeTab TabChanged (List.length model.sessions) (List.length model.resolvedSessions))
+                [ class "ph4 pt3 flex justify-between items-end" ]
+                [ div
+                    [ class "flex" ]
+                    [ -- Open tab
+                      button
+                        [ class
+                            (if model.activeTab == Tabs.Open then
+                                "bg-white ph3 pv2 f6 fw5 dark-gray ba b--light-gray bn br0"
+
+                             else
+                                "bg-white-50 ph3 pv2 f6 gray ba b--light-gray bn br0"
+                            )
+                        , onClick (TabChanged Tabs.Open)
+                        , style "width" "120px"
+                        , style "height" "40px"
+                        ]
+                        [ text ("Open (" ++ String.fromInt (List.length model.sessions) ++ ")") ]
+
+                    -- Resolved tab
+                    , button
+                        [ class
+                            (if model.activeTab == Tabs.Resolved then
+                                "bg-white ph3 pv2 f6 fw5 dark-gray ba b--light-gray bn br0"
+
+                             else
+                                "bg-white-50 ph3 pv2 f6 gray ba b--light-gray bn br0"
+                            )
+                        , onClick (TabChanged Tabs.Resolved)
+                        , style "width" "120px"
+                        , style "height" "40px"
+                        ]
+                        [ text ("Resolved (" ++ String.fromInt (List.length model.resolvedSessions) ++ ")") ]
+                    ]
+
+                -- New Session Button
                 , button
-                    [ class "bg-dark-gray white ph3 pv2 br3 f6 fw5 bn pointer"
+                    [ class "bg-dark-gray white ph3 pv2 br3 f6 fw5 bn pointer flex items-center justify-center no-wrap"
                     , onClick NewSessionClicked
+                    , style "width" "120px"
+                    , style "height" "32px"
+                    , style "border-radius" "16px"
+                    , style "white-space" "nowrap"
                     ]
                     [ text "+ New Session" ]
                 ]
 
             -- Board area
             , div
-                [ class "bg-white-30 br2 pa4 min-h-75"
-                , style "min-height" "580px"
+                [ class "mh4 mt3 pa4"
+                , style "background-color" "rgba(255,255,255,0.3)"
+                , style "border" "1px solid rgba(0,0,0,0.05)"
+                , style "border-radius" "4px"
+                , style "min-height" "500px"
                 ]
                 [ case model.activeTab of
                     Tabs.Open ->
@@ -93,7 +134,7 @@ view model =
 
             -- Status legend and stats
             , div
-                [ class "flex justify-between items-center mt3" ]
+                [ class "ph4 pt4 pb4 flex justify-between items-center" ]
                 [ viewStatusLegend
                 , p
                     [ class "ma0 f6 gray" ]
@@ -122,16 +163,22 @@ viewResolvedSessions sessions =
 viewNewSessionCard : Html Msg
 viewNewSessionCard =
     div
-        [ class "bg-white br2 ba b--dashed b--light-gray pa0 ma2 w5 h5 flex flex-column items-center justify-center pointer"
-        , style "min-height" "160px"
+        [ class "br2 ma2 flex flex-column items-center justify-center pointer"
+        , style "width" "220px"
+        , style "height" "180px"
+        , style "border" "2px dashed #ddd"
+        , style "opacity" "0.6"
         , onClick NewSessionClicked
         ]
-        [ p
-            [ class "ma0 f5 gray tc" ]
-            [ text "+ Start new" ]
-        , p
-            [ class "ma0 f5 gray tc" ]
-            [ text "session" ]
+        [ div
+            [ class "tc" ]
+            [ p
+                [ class "ma0 f5 gray" ]
+                [ text "+ Start new" ]
+            , p
+                [ class "ma0 f5 gray" ]
+                [ text "session" ]
+            ]
         ]
 
 
@@ -144,17 +191,35 @@ viewStatusLegend =
             [ text "Status:" ]
         , div
             [ class "flex items-center mr3" ]
-            [ div [ class "w3 h3 br-100 bg-blue mr1" ] []
+            [ div
+                [ class "br-100 mr1"
+                , style "width" "8px"
+                , style "height" "8px"
+                , style "background-color" "#4a90e2"
+                ]
+                []
             , span [ class "f7 gray" ] [ text "Ready" ]
             ]
         , div
             [ class "flex items-center mr3" ]
-            [ div [ class "w3 h3 br-100 bg-orange mr1" ] []
+            [ div
+                [ class "br-100 mr1"
+                , style "width" "8px"
+                , style "height" "8px"
+                , style "background-color" "#ffa500"
+                ]
+                []
             , span [ class "f7 gray" ] [ text "Waiting" ]
             ]
         , div
             [ class "flex items-center" ]
-            [ div [ class "w3 h3 br-100 bg-red mr1" ] []
+            [ div
+                [ class "br-100 mr1"
+                , style "width" "8px"
+                , style "height" "8px"
+                , style "background-color" "#ff6b6b"
+                ]
+                []
             , span [ class "f7 gray" ] [ text "Overdue" ]
             ]
         ]
