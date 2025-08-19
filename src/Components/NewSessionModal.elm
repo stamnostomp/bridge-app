@@ -130,7 +130,7 @@ viewSuggestions suggestions selectedIndex onSelectSuggestion =
         , style "top" "100%"
         , style "left" "0"
         , style "z-index" "1001"
-        , style "max-height" "200px"
+        , style "max-height" "100px"
         , style "overflow-y" "auto"
         , style "border-top" "none"
         , style "border-radius" "0 0 4px 4px"
@@ -143,7 +143,7 @@ viewSuggestion selectedIndex onSelectSuggestion index suggestion =
     div
         [ class
             (if index == selectedIndex then
-                "pa3 f6 pointer bg-light-blue white"
+                "pa3 f6 pointer bg-dark-gray white"
 
              else
                 "pa3 f6 pointer hover-bg-near-white"
