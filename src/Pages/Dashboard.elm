@@ -1,4 +1,4 @@
-module Pages.Dashboard exposing (Model, Msg, init, update, view)
+module Pages.Dashboard exposing (Model, Msg(..), init, update, view)
 
 import Components.Navbar as Navbar
 import Components.NewSessionModal as NewSessionModal
@@ -83,7 +83,7 @@ update msg model =
             { model | modalState = newModal }
 
         SessionClicked sessionId ->
-            -- TODO: Navigate to session page
+            -- This will be handled by the parent component (Main.elm)
             model
 
         CloseModal ->
@@ -359,7 +359,7 @@ viewOpenSessions sessions =
     div
         [ class "flex flex-wrap justify-start"
         ]
-        (List.map (\session -> Html.map (\_ -> SessionClicked session.id) (SessionCard.view session)) sessions
+        (List.map viewClickableSessionCard sessions
             ++ [ viewNewSessionCard ]
         )
 
@@ -369,7 +369,12 @@ viewResolvedSessions sessions =
     div
         [ class "flex flex-wrap justify-start"
         ]
-        (List.map (\session -> Html.map (\_ -> SessionClicked session.id) (SessionCard.view session)) sessions)
+        (List.map viewClickableSessionCard sessions)
+
+
+viewClickableSessionCard : Session -> Html Msg
+viewClickableSessionCard session =
+    SessionCard.view session SessionClicked
 
 
 viewNewSessionCard : Html Msg

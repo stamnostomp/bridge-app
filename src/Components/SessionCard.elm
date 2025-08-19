@@ -11,15 +11,17 @@ import Types.Session exposing (Session, SessionStatus(..), sessionStatusColor, s
 -- VIEW
 
 
-view : Session -> Html msg
-view session =
+view : Session -> (String -> msg) -> Html msg
+view session onSessionClick =
     div
-        [ class "bg-white br2 pointer"
+        [ class "bg-white br2 session-card pointer"
         , style "width" "220px"
         , style "height" "180px"
         , style "margin" "12px"
         , style "box-shadow" "0 2px 8px rgba(0,0,0,0.1)"
         , style "border" "1px solid rgba(0,0,0,0.1)"
+        , style "cursor" "pointer"
+        , onClick (onSessionClick session.id)
         ]
         [ -- Header with participant name and status indicator
           div
