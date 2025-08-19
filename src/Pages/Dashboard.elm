@@ -27,6 +27,9 @@ type alias ModalState =
     { isOpen : Bool
     , participantName : String
     , description : String
+    , suggestions : List String
+    , showSuggestions : Bool
+    , selectedSuggestionIndex : Int
     }
 
 
@@ -39,6 +42,9 @@ init =
         { isOpen = False
         , participantName = ""
         , description = ""
+        , suggestions = []
+        , showSuggestions = False
+        , selectedSuggestionIndex = 0
         }
     }
 
@@ -56,6 +62,8 @@ type Msg
     | DescriptionChanged String
     | CreateSession
     | NoOp
+    | SelectSuggestion String
+    | HandleKeyDown Int
 
 
 update : Msg -> Model -> Model
@@ -88,6 +96,9 @@ update msg model =
                         | isOpen = False
                         , participantName = ""
                         , description = ""
+                        , suggestions = []
+                        , showSuggestions = False
+                        , selectedSuggestionIndex = 0
                     }
             in
             { model | modalState = newModal }
@@ -97,10 +108,111 @@ update msg model =
                 currentModal =
                     model.modalState
 
+                filteredSuggestions =
+                    filterSuggestions name
+
                 newModal =
-                    { currentModal | participantName = name }
+                    { currentModal
+                        | participantName = name
+                        , suggestions = filteredSuggestions
+                        , showSuggestions = String.length (String.trim name) > 0 && not (List.isEmpty filteredSuggestions)
+                        , selectedSuggestionIndex = 0
+                    }
             in
             { model | modalState = newModal }
+
+        SelectSuggestion name ->
+            let
+                currentModal =
+                    model.modalState
+
+                newModal =
+                    { currentModal
+                        | participantName = name
+                        , suggestions = []
+                        , showSuggestions = False
+                        , selectedSuggestionIndex = 0
+                    }
+            in
+            { model | modalState = newModal }
+
+        HandleKeyDown keyCode ->
+            case keyCode of
+                -- Arrow Down (40)
+                40 ->
+                    let
+                        currentModal =
+                            model.modalState
+
+                        maxIndex =
+                            List.length currentModal.suggestions - 1
+
+                        newIndex =
+                            Basics.min maxIndex (currentModal.selectedSuggestionIndex + 1)
+
+                        newModal =
+                            { currentModal | selectedSuggestionIndex = newIndex }
+                    in
+                    { model | modalState = newModal }
+
+                -- Arrow Up (38)
+                38 ->
+                    let
+                        currentModal =
+                            model.modalState
+
+                        newIndex =
+                            Basics.max 0 (currentModal.selectedSuggestionIndex - 1)
+
+                        newModal =
+                            { currentModal | selectedSuggestionIndex = newIndex }
+                    in
+                    { model | modalState = newModal }
+
+                -- Enter (13)
+                13 ->
+                    let
+                        currentModal =
+                            model.modalState
+
+                        selectedSuggestion =
+                            currentModal.suggestions
+                                |> List.drop currentModal.selectedSuggestionIndex
+                                |> List.head
+                    in
+                    case selectedSuggestion of
+                        Just suggestion ->
+                            let
+                                newModal =
+                                    { currentModal
+                                        | participantName = suggestion
+                                        , suggestions = []
+                                        , showSuggestions = False
+                                        , selectedSuggestionIndex = 0
+                                    }
+                            in
+                            { model | modalState = newModal }
+
+                        Nothing ->
+                            model
+
+                -- Escape (27)
+                27 ->
+                    let
+                        currentModal =
+                            model.modalState
+
+                        newModal =
+                            { currentModal
+                                | suggestions = []
+                                , showSuggestions = False
+                                , selectedSuggestionIndex = 0
+                            }
+                    in
+                    { model | modalState = newModal }
+
+                _ ->
+                    model
 
         DescriptionChanged description ->
             let
@@ -122,6 +234,9 @@ update msg model =
                         { isOpen = False
                         , participantName = ""
                         , description = ""
+                        , suggestions = []
+                        , showSuggestions = False
+                        , selectedSuggestionIndex = 0
                         }
                 in
                 { model
@@ -233,6 +348,8 @@ view model =
             , onDescriptionChange = DescriptionChanged
             , onSubmit = CreateSession
             , onModalContentClick = NoOp
+            , onSelectSuggestion = SelectSuggestion
+            , onKeyDown = HandleKeyDown
             }
         ]
 
@@ -343,6 +460,50 @@ createNewSession participantName description =
     , description = description
     , status = Waiting
     }
+
+
+filterSuggestions : String -> List String
+filterSuggestions input =
+    let
+        lowercaseInput =
+            String.toLower (String.trim input)
+    in
+    if String.length lowercaseInput < 1 then
+        []
+
+    else
+        suggestedNames
+            |> List.filter (\name -> String.contains lowercaseInput (String.toLower name))
+            |> List.take 5
+
+
+
+-- SUGGESTED NAMES (In a real app, this would come from previous sessions or a user database)
+
+
+suggestedNames : List String
+suggestedNames =
+    [ "Alex Chen"
+    , "Sarah Mitchell"
+    , "Jordan Kim"
+    , "Morgan Davis"
+    , "Taylor Johnson"
+    , "Casey Wilson"
+    , "River Martinez"
+    , "Jamie Brown"
+    , "Sam Thompson"
+    , "Quinn Anderson"
+    , "Blake Williams"
+    , "Drew Garcia"
+    , "Avery Miller"
+    , "Logan Lee"
+    , "Cameron White"
+    , "Riley Jones"
+    , "Harper Clark"
+    , "Sage Rodriguez"
+    , "Parker Lewis"
+    , "Emery Walker"
+    ]
 
 
 

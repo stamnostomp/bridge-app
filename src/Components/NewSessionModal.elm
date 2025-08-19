@@ -10,7 +10,7 @@ import Json.Decode as Decode
 -- VIEW
 
 
-view : { isOpen : Bool, participantName : String, description : String } -> { onClose : msg, onParticipantNameChange : String -> msg, onDescriptionChange : String -> msg, onSubmit : msg, onModalContentClick : msg } -> Html msg
+view : { isOpen : Bool, participantName : String, description : String, suggestions : List String, showSuggestions : Bool, selectedSuggestionIndex : Int } -> { onClose : msg, onParticipantNameChange : String -> msg, onDescriptionChange : String -> msg, onSubmit : msg, onModalContentClick : msg, onSelectSuggestion : String -> msg, onKeyDown : Int -> msg } -> Html msg
 view state handlers =
     if state.isOpen then
         div
@@ -45,20 +45,29 @@ view state handlers =
                     [ class "mb4" ]
                     [ -- Participant Name Field
                       div
-                        [ class "mb3" ]
+                        [ class "mb3 relative" ]
                         [ label
                             [ class "db mb2 f6 fw5 dark-gray" ]
                             [ text "Participant Name" ]
-                        , input
-                            [ type_ "text"
-                            , placeholder "Enter the other person's name"
-                            , value state.participantName
-                            , onInput handlers.onParticipantNameChange
-                            , class "w-100 pa3 ba b--light-gray br2 f6"
-                            , style "outline" "none"
-                            , style "border-color" "#e0e0e0"
+                        , div
+                            [ class "relative" ]
+                            [ input
+                                [ type_ "text"
+                                , placeholder "Enter the other person's name"
+                                , value state.participantName
+                                , onInput handlers.onParticipantNameChange
+                                , onKeyDown handlers.onKeyDown
+                                , class "w-100 pa3 ba b--light-gray br2 f6"
+                                , style "outline" "none"
+                                , style "border-color" "#e0e0e0"
+                                ]
+                                []
+                            , if state.showSuggestions && not (List.isEmpty state.suggestions) then
+                                viewSuggestions state.suggestions state.selectedSuggestionIndex handlers.onSelectSuggestion
+
+                              else
+                                text ""
                             ]
-                            []
                         ]
 
                     -- Description Field
@@ -108,3 +117,43 @@ view state handlers =
 
     else
         text ""
+
+
+
+-- HELPERS
+
+
+viewSuggestions : List String -> Int -> (String -> msg) -> Html msg
+viewSuggestions suggestions selectedIndex onSelectSuggestion =
+    div
+        [ class "absolute w-100 bg-white ba b--light-gray br2 shadow-1"
+        , style "top" "100%"
+        , style "left" "0"
+        , style "z-index" "1001"
+        , style "max-height" "200px"
+        , style "overflow-y" "auto"
+        , style "border-top" "none"
+        , style "border-radius" "0 0 4px 4px"
+        ]
+        (List.indexedMap (viewSuggestion selectedIndex onSelectSuggestion) suggestions)
+
+
+viewSuggestion : Int -> (String -> msg) -> Int -> String -> Html msg
+viewSuggestion selectedIndex onSelectSuggestion index suggestion =
+    div
+        [ class
+            (if index == selectedIndex then
+                "pa3 f6 pointer bg-light-blue white"
+
+             else
+                "pa3 f6 pointer hover-bg-near-white"
+            )
+        , onClick (onSelectSuggestion suggestion)
+        , style "cursor" "pointer"
+        ]
+        [ text suggestion ]
+
+
+onKeyDown : (Int -> msg) -> Attribute msg
+onKeyDown toMsg =
+    on "keydown" (Decode.map toMsg keyCode)
