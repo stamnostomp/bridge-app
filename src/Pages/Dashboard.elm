@@ -123,6 +123,7 @@ view model =
                 , style "border" "1px solid rgba(0,0,0,0.05)"
                 , style "border-radius" "4px"
                 , style "min-height" "500px"
+                , style "overflow-x" "auto"
                 ]
                 [ case model.activeTab of
                     Tabs.Open ->
@@ -147,7 +148,8 @@ view model =
 viewOpenSessions : List Session -> Html Msg
 viewOpenSessions sessions =
     div
-        [ class "flex flex-wrap" ]
+        [ class "flex flex-wrap justify-start"
+        ]
         (List.map (\session -> Html.map (\_ -> SessionClicked session.id) (SessionCard.view session)) sessions
             ++ [ viewNewSessionCard ]
         )
@@ -156,16 +158,18 @@ viewOpenSessions sessions =
 viewResolvedSessions : List Session -> Html Msg
 viewResolvedSessions sessions =
     div
-        [ class "flex flex-wrap" ]
+        [ class "flex flex-wrap justify-start"
+        ]
         (List.map (\session -> Html.map (\_ -> SessionClicked session.id) (SessionCard.view session)) sessions)
 
 
 viewNewSessionCard : Html Msg
 viewNewSessionCard =
     div
-        [ class "br2 ma2 flex flex-column items-center justify-center pointer"
+        [ class "br2 flex flex-column items-center justify-center pointer"
         , style "width" "220px"
         , style "height" "180px"
+        , style "margin" "12px"
         , style "border" "2px dashed #ddd"
         , style "opacity" "0.6"
         , onClick NewSessionClicked

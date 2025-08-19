@@ -14,9 +14,10 @@ import Types.Session exposing (Session, SessionStatus(..), sessionStatusColor, s
 view : Session -> Html msg
 view session =
     div
-        [ class "bg-white br2 ma2 pointer"
+        [ class "bg-white br2 pointer"
         , style "width" "220px"
         , style "height" "180px"
+        , style "margin" "12px"
         , style "box-shadow" "0 2px 8px rgba(0,0,0,0.1)"
         , style "border" "1px solid rgba(0,0,0,0.1)"
         ]
@@ -42,10 +43,10 @@ view session =
 
         -- Content area
         , div
-            [ class "pa3 flex flex-column justify-between"
+            [ class "pa3 flex flex-column"
             , style "height" "145px"
             ]
-            [ div [ class "flex-auto" ]
+            [ div [ class "flex-auto pb2" ]
                 [ p
                     [ class "ma0 mb2 f6 gray fw5" ]
                     [ text ("Round " ++ String.fromInt session.currentRound ++ " of " ++ String.fromInt session.totalRounds) ]
@@ -56,22 +57,28 @@ view session =
                     [ class "ma0 mb2 f7 light-silver" ]
                     [ text ("Last activity: " ++ formatTimeAgo session.lastActivity) ]
                 , p
-                    [ class "ma0 mb3 f7 gray lh-copy"
+                    [ class "ma0 f7 gray lh-copy"
                     , style "overflow" "hidden"
                     , style "display" "-webkit-box"
                     , style "-webkit-line-clamp" "2"
                     , style "-webkit-box-orient" "vertical"
+                    , style "max-height" "2.8em"
+                    , style "line-height" "1.4"
                     ]
                     [ text session.description ]
                 ]
 
-            -- Status badge
-            , div [ class "flex justify-start" ]
+            -- Status badge (fixed to bottom)
+            , div
+                [ class "flex justify-start"
+                , style "margin-top" "auto"
+                ]
                 [ span
                     [ class ("f7 ph2 pv1 br3 " ++ statusClasses session.status)
                     , style "border" "1px solid"
                     , style "font-size" "10px"
                     , style "line-height" "1"
+                    , style "flex-shrink" "0"
                     ]
                     [ text (sessionStatusToString session.status) ]
                 ]

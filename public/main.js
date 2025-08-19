@@ -5577,9 +5577,10 @@ var $author$project$Pages$Dashboard$viewNewSessionCard = A2(
 	$elm$html$Html$div,
 	_List_fromArray(
 		[
-			$elm$html$Html$Attributes$class('br2 ma2 flex flex-column items-center justify-center pointer'),
+			$elm$html$Html$Attributes$class('br2 flex flex-column items-center justify-center pointer'),
 			A2($elm$html$Html$Attributes$style, 'width', '220px'),
 			A2($elm$html$Html$Attributes$style, 'height', '180px'),
+			A2($elm$html$Html$Attributes$style, 'margin', '12px'),
 			A2($elm$html$Html$Attributes$style, 'border', '2px dashed #ddd'),
 			A2($elm$html$Html$Attributes$style, 'opacity', '0.6'),
 			$elm$html$Html$Events$onClick($author$project$Pages$Dashboard$NewSessionClicked)
@@ -5621,7 +5622,7 @@ var $author$project$Pages$Dashboard$viewOpenSessions = function (sessions) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('flex flex-wrap')
+				$elm$html$Html$Attributes$class('flex flex-wrap justify-start')
 			]),
 		_Utils_ap(
 			A2(
@@ -5643,7 +5644,7 @@ var $author$project$Pages$Dashboard$viewResolvedSessions = function (sessions) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('flex flex-wrap')
+				$elm$html$Html$Attributes$class('flex flex-wrap justify-start')
 			]),
 		A2(
 			$elm$core$List$map,
@@ -5858,7 +5859,8 @@ var $author$project$Pages$Dashboard$view = function (model) {
 								A2($elm$html$Html$Attributes$style, 'background-color', 'rgba(255,255,255,0.3)'),
 								A2($elm$html$Html$Attributes$style, 'border', '1px solid rgba(0,0,0,0.05)'),
 								A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
-								A2($elm$html$Html$Attributes$style, 'min-height', '500px')
+								A2($elm$html$Html$Attributes$style, 'min-height', '500px'),
+								A2($elm$html$Html$Attributes$style, 'overflow-x', 'auto')
 							]),
 						_List_fromArray(
 							[
