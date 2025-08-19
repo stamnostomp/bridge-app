@@ -1,0 +1,12 @@
+# Elm
+elm-stuff/
+public/main.js
+public/main.js.map
+
+# Nix
+result
+result-*
+
+# OS
+.DS_Store
+Thumbs.db
