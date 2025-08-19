@@ -1,6 +1,7 @@
 module Pages.Dashboard exposing (Model, Msg, init, update, view)
 
 import Components.Navbar as Navbar
+import Components.NewSessionModal as NewSessionModal
 import Components.SessionCard as SessionCard
 import Components.Tabs as Tabs
 import Html exposing (..)
@@ -18,6 +19,14 @@ type alias Model =
     { sessions : List Session
     , activeTab : Tabs.Tab
     , resolvedSessions : List Session
+    , modalState : ModalState
+    }
+
+
+type alias ModalState =
+    { isOpen : Bool
+    , participantName : String
+    , description : String
     }
 
 
@@ -26,6 +35,11 @@ init =
     { sessions = mockSessions
     , activeTab = Tabs.Open
     , resolvedSessions = mockResolvedSessions
+    , modalState =
+        { isOpen = False
+        , participantName = ""
+        , description = ""
+        }
     }
 
 
@@ -37,6 +51,10 @@ type Msg
     = TabChanged Tabs.Tab
     | NewSessionClicked
     | SessionClicked String
+    | CloseModal
+    | ParticipantNameChanged String
+    | DescriptionChanged String
+    | CreateSession
 
 
 update : Msg -> Model -> Model
@@ -46,12 +64,72 @@ update msg model =
             { model | activeTab = tab }
 
         NewSessionClicked ->
-            -- TODO: Navigate to new session page
-            model
+            let
+                currentModal =
+                    model.modalState
+
+                newModal =
+                    { currentModal | isOpen = True }
+            in
+            { model | modalState = newModal }
 
         SessionClicked sessionId ->
             -- TODO: Navigate to session page
             model
+
+        CloseModal ->
+            let
+                currentModal =
+                    model.modalState
+
+                newModal =
+                    { currentModal
+                        | isOpen = False
+                        , participantName = ""
+                        , description = ""
+                    }
+            in
+            { model | modalState = newModal }
+
+        ParticipantNameChanged name ->
+            let
+                currentModal =
+                    model.modalState
+
+                newModal =
+                    { currentModal | participantName = name }
+            in
+            { model | modalState = newModal }
+
+        DescriptionChanged description ->
+            let
+                currentModal =
+                    model.modalState
+
+                newModal =
+                    { currentModal | description = description }
+            in
+            { model | modalState = newModal }
+
+        CreateSession ->
+            if String.trim model.modalState.participantName /= "" && String.trim model.modalState.description /= "" then
+                let
+                    newSession =
+                        createNewSession model.modalState.participantName model.modalState.description
+
+                    newModal =
+                        { isOpen = False
+                        , participantName = ""
+                        , description = ""
+                        }
+                in
+                { model
+                    | sessions = newSession :: model.sessions
+                    , modalState = newModal
+                }
+
+            else
+                model
 
 
 
@@ -142,6 +220,15 @@ view model =
                     [ text (String.fromInt (List.length model.sessions) ++ " active sessions • " ++ String.fromInt (readySessionsCount model.sessions) ++ " ready for exchange") ]
                 ]
             ]
+
+        -- Modal
+        , NewSessionModal.view
+            model.modalState
+            { onClose = CloseModal
+            , onParticipantNameChange = ParticipantNameChanged
+            , onDescriptionChange = DescriptionChanged
+            , onSubmit = CreateSession
+            }
         ]
 
 
@@ -238,6 +325,19 @@ readySessionsCount sessions =
     sessions
         |> List.filter (\session -> session.status == Ready)
         |> List.length
+
+
+createNewSession : String -> String -> Session
+createNewSession participantName description =
+    { id = "new-" ++ String.fromInt (Time.posixToMillis (Time.millisToPosix 0)) -- In a real app, you'd generate a proper ID
+    , participantName = participantName
+    , currentRound = 1
+    , totalRounds = 3
+    , startedAt = Time.millisToPosix 1234567890000 -- In a real app, you'd use current time
+    , lastActivity = Time.millisToPosix 1234567890000
+    , description = description
+    , status = Waiting
+    }
 
 
 
