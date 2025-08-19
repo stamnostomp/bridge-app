@@ -3,13 +3,14 @@ module Components.NewSessionModal exposing (view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Json.Decode as Decode
 
 
 
 -- VIEW
 
 
-view : { isOpen : Bool, participantName : String, description : String } -> { onClose : msg, onParticipantNameChange : String -> msg, onDescriptionChange : String -> msg, onSubmit : msg } -> Html msg
+view : { isOpen : Bool, participantName : String, description : String } -> { onClose : msg, onParticipantNameChange : String -> msg, onDescriptionChange : String -> msg, onSubmit : msg, onModalContentClick : msg } -> Html msg
 view state handlers =
     if state.isOpen then
         div
@@ -23,6 +24,7 @@ view state handlers =
                 , style "width" "100%"
                 , style "max-width" "500px"
                 , style "box-shadow" "0 10px 25px rgba(0, 0, 0, 0.2)"
+                , stopPropagationOn "click" (Decode.map (\_ -> ( handlers.onModalContentClick, True )) (Decode.succeed ()))
                 ]
                 [ -- Header
                   div

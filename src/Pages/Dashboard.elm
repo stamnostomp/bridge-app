@@ -55,6 +55,7 @@ type Msg
     | ParticipantNameChanged String
     | DescriptionChanged String
     | CreateSession
+    | NoOp
 
 
 update : Msg -> Model -> Model
@@ -130,6 +131,9 @@ update msg model =
 
             else
                 model
+
+        NoOp ->
+            model
 
 
 
@@ -228,6 +232,7 @@ view model =
             , onParticipantNameChange = ParticipantNameChanged
             , onDescriptionChange = DescriptionChanged
             , onSubmit = CreateSession
+            , onModalContentClick = NoOp
             }
         ]
 
