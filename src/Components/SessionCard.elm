@@ -43,10 +43,10 @@ view session =
 
         -- Content area
         , div
-            [ class "pa3 flex flex-column"
+            [ class "pa3 flex flex-column relative"
             , style "height" "145px"
             ]
-            [ div [ class "flex-auto pb2" ]
+            [ div [ class "flex-auto" ]
                 [ p
                     [ class "ma0 mb2 f6 gray fw5" ]
                     [ text ("Round " ++ String.fromInt session.currentRound ++ " of " ++ String.fromInt session.totalRounds) ]
@@ -64,14 +64,17 @@ view session =
                     , style "-webkit-box-orient" "vertical"
                     , style "max-height" "2.8em"
                     , style "line-height" "1.4"
+                    , style "padding-right" "80px"
+                    , style "margin-bottom" "8px"
                     ]
                     [ text session.description ]
                 ]
 
-            -- Status badge (fixed to bottom)
+            -- Status badge (positioned absolutely in bottom-right)
             , div
-                [ class "flex justify-start"
-                , style "margin-top" "auto"
+                [ class "absolute"
+                , style "bottom" "12px"
+                , style "right" "12px"
                 ]
                 [ span
                     [ class ("f7 ph2 pv1 br3 " ++ statusClasses session.status)

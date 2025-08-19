@@ -5438,9 +5438,10 @@ var $author$project$Components$SessionCard$view = function (session) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('bg-white br2 ma2 pointer'),
+				$elm$html$Html$Attributes$class('bg-white br2 pointer'),
 				A2($elm$html$Html$Attributes$style, 'width', '220px'),
 				A2($elm$html$Html$Attributes$style, 'height', '180px'),
+				A2($elm$html$Html$Attributes$style, 'margin', '12px'),
 				A2($elm$html$Html$Attributes$style, 'box-shadow', '0 2px 8px rgba(0,0,0,0.1)'),
 				A2($elm$html$Html$Attributes$style, 'border', '1px solid rgba(0,0,0,0.1)')
 			]),
@@ -5485,7 +5486,7 @@ var $author$project$Components$SessionCard$view = function (session) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('pa3 flex flex-column justify-between'),
+						$elm$html$Html$Attributes$class('pa3 flex flex-column relative'),
 						A2($elm$html$Html$Attributes$style, 'height', '145px')
 					]),
 				_List_fromArray(
@@ -5535,11 +5536,15 @@ var $author$project$Components$SessionCard$view = function (session) {
 								$elm$html$Html$p,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('ma0 mb3 f7 gray lh-copy'),
+										$elm$html$Html$Attributes$class('ma0 f7 gray lh-copy'),
 										A2($elm$html$Html$Attributes$style, 'overflow', 'hidden'),
 										A2($elm$html$Html$Attributes$style, 'display', '-webkit-box'),
 										A2($elm$html$Html$Attributes$style, '-webkit-line-clamp', '2'),
-										A2($elm$html$Html$Attributes$style, '-webkit-box-orient', 'vertical')
+										A2($elm$html$Html$Attributes$style, '-webkit-box-orient', 'vertical'),
+										A2($elm$html$Html$Attributes$style, 'max-height', '2.8em'),
+										A2($elm$html$Html$Attributes$style, 'line-height', '1.4'),
+										A2($elm$html$Html$Attributes$style, 'padding-right', '80px'),
+										A2($elm$html$Html$Attributes$style, 'margin-bottom', '8px')
 									]),
 								_List_fromArray(
 									[
@@ -5550,7 +5555,9 @@ var $author$project$Components$SessionCard$view = function (session) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('flex justify-start')
+								$elm$html$Html$Attributes$class('absolute'),
+								A2($elm$html$Html$Attributes$style, 'bottom', '12px'),
+								A2($elm$html$Html$Attributes$style, 'right', '12px')
 							]),
 						_List_fromArray(
 							[
@@ -5562,7 +5569,8 @@ var $author$project$Components$SessionCard$view = function (session) {
 										'f7 ph2 pv1 br3 ' + $author$project$Components$SessionCard$statusClasses(session.status)),
 										A2($elm$html$Html$Attributes$style, 'border', '1px solid'),
 										A2($elm$html$Html$Attributes$style, 'font-size', '10px'),
-										A2($elm$html$Html$Attributes$style, 'line-height', '1')
+										A2($elm$html$Html$Attributes$style, 'line-height', '1'),
+										A2($elm$html$Html$Attributes$style, 'flex-shrink', '0')
 									]),
 								_List_fromArray(
 									[
